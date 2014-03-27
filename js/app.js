@@ -1,4 +1,4 @@
-var graph = new WordGraph('a', true);
+var graph = new WordGraph();
 
 // graph.addWord('and');
 // graph.addWord('at');
@@ -31,3 +31,15 @@ listOfWords.forEach(function(word){
 doRender();
 console.log(layout.layout());
 
+$(function(){
+  $('#resetButton').on('click', function(){
+    graph = new WordGraph();
+    doRender();
+  });
+  $('#addButton').on('click', function(){
+    var word = $('#input').val();
+    graph.addWord(word);
+    doRender();
+  });
+});
+//input addButton resetButton

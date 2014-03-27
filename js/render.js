@@ -46,6 +46,9 @@ var render = function(layout){
   var r = layout.r;
   var d = layout.d;
   container.innerHTML = '';
+  layout.links.forEach(function(link){
+    createLine.apply(null, link);
+  });
   layout.nodes.forEach(function(node){
     console.log(r, d, node.x, node.y);
     width = Math.max(node.x, width);
@@ -55,7 +58,4 @@ var render = function(layout){
     createNode(node.letter, node.canEnd, r, node.x, node.y);
   });
 
-  layout.links.forEach(function(link){
-    createLine.apply(null, link);
-  });
 };
