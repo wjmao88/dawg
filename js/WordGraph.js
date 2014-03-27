@@ -9,8 +9,29 @@ WordGraph.makeNullNode = function(){
 
 WordGraph.prototype.addWord = function(word){
   var ends = this.constructWordChain(word);
-  this.antiRoot.backwardMerge(ends[1]);
   this.root.forwardMerge(ends[0]);
+  this.antiRoot.backwardMerge(ends[1]);
+  var antiRoot = this.antiRoot;
+
+  antiRoot.forEachParent(function(parent){
+    if (parent.children.length > 1){
+      parent.forEachChild(function(child, index){
+        if (child === antiRoot){
+          parent.children.splice(index, 1);
+        }
+      });
+    }
+  });
+  /*
+  1. keep merging from the last merge point
+  check if next on the chain is mergable
+  but has problem with multiple merging choices
+
+  2. going back from the antiroot
+  but when found something mergable
+
+
+   */
 };
 
 WordGraph.prototype.constructWordChain = function(word){

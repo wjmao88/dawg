@@ -1,7 +1,3 @@
-var r = 20;
-var d = 60;
-var row = 1;
-var col = 0;
 var container = document.getElementsByTagName('svg')[0];
 
 var createNode = function(letter, end, r, cx, cy){
@@ -9,12 +5,12 @@ var createNode = function(letter, end, r, cx, cy){
   circle.setAttribute('r', r);
   circle.setAttribute('fill', 'black');
   if (end){
-    circle.setAttribute('stroke', 'grey');
-    circle.setAttribute('stroke-width', '10');
+    circle.setAttribute('stroke', 'red');
+    circle.setAttribute('stroke-width', '2');
   }
   var content = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  content.setAttribute('fill', 'red');
-  content.setAttribute('font-size', 30);
+  content.setAttribute('fill', 'white');
+  content.setAttribute('font-size', r*1.5);
   content.setAttribute('transform', 'translate(' + (-r/2) +',' + (r/2) + ')');
   content.innerHTML = letter? letter.toUpperCase() : '-';
 
@@ -44,16 +40,22 @@ var createLine = function(x1, y1, x2, y2){
 };
 
 
-var render = function(node, px, py, cx, cy){
-  container.setAttribute('width', col*(d+5));
-  container.setAttribute('height', row*(d+2));
-  createNode(node.letter, node.canEnd, r, cx, cy);
-  createLine(px, py, cx, cy);
-  if (node.children.length > 0){
-    col++;
-  }
-  node.children.forEach(function(child){
-    render(child, cx, cy, cx+d, d*row);
-    row++;
+var render = function(layout){
+  var height = 0;
+  var width = 0;
+  var r = layout.r;
+  var d = layout.d;
+  container.innerHTML = '';
+  layout.nodes.forEach(function(node){
+    console.log(r, d, node.x, node.y);
+    width = Math.max(node.x, width);
+    height = Math.max(node.y, height);
+    container.setAttribute('width', width + d*5);
+    container.setAttribute('height', height + d*5);
+    createNode(node.letter, node.canEnd, r, node.x, node.y);
+  });
+
+  layout.links.forEach(function(link){
+    createLine.apply(null, link);
   });
 };
