@@ -7,7 +7,18 @@ WordGraph.makeNullNode = function(){
   return new WordNode(null, false, null);
 };
 
+WordGraph.prototype.find = function(word) {
+  var found = false;
+  this.root.forEachChild(function(child){
+    found = found || child.findWord(word);
+  });
+  return found;
+};
+
 WordGraph.prototype.addWord = function(word){
+  if (!word || !word.length || this.find(word)){
+    return;
+  }
   var ends = this.constructWordChain(word);
   this.root.forwardMerge(ends[0]);
   this.antiRoot.backwardMerge(ends[1]);
@@ -22,20 +33,12 @@ WordGraph.prototype.addWord = function(word){
       });
     }
   });
-  /*
-  1. keep merging from the last merge point
-  check if next on the chain is mergable
-  but has problem with multiple merging choices
 
-  2. going back from the antiroot
-  but when found something mergable
-
-
-   */
+  queueRender();
 };
 
 WordGraph.prototype.constructWordChain = function(word){
-  var head = new WordNode(word.charAt(0));
+  var head = this.root.factory(word.charAt(0), false);
   var node = head;
   for (var i=1; i<word.length; i++){
     node.children.push(node.factory(word.charAt(i), false));

@@ -50,7 +50,6 @@ var render = function(layout){
     createLine.apply(null, link);
   });
   layout.nodes.forEach(function(node){
-    console.log(r, d, node.x, node.y);
     width = Math.max(node.x, width);
     height = Math.max(node.y, height);
     container.setAttribute('width', width + d*5);
